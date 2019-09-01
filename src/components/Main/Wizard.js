@@ -199,7 +199,7 @@ class Wizard extends Component {
                 fetch('http://192.168.4.1/deviceinfo')
                 .then((response) => response = response.json())
                 .then((response) => {
-                    // TODO: Save MAC Address
+                    console.log(response)
                     clearTimeout(timeout);
                     if(!didTimeOut) {
                         resolve(response);
