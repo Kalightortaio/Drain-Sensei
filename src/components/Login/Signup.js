@@ -428,19 +428,19 @@ class Signup extends Component {
         }
         timeout = setTimeout(() => {
             fetch(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=AIzaSyBDDPc1AqedpsTLpqtmp2UqHUBR7WFJNm8&input=${unformattedAddress}&inputtype=textquery&fields=formatted_address,name&locationbias=ipbias`)
+                .then((response) => response = response.json())
                 .then((response) => {
-                    var responseData = (JSON.parse(response._bodyInit))
-                    if (responseData["status"] == "OK") {
-                        var formattedAddress = responseData["candidates"][0].formatted_address
+                    if (response["status"] == "OK") {
+                        var formattedAddress = response["candidates"][0].formatted_address
                         if (isMounted) {
                             this.setState({ addressValidation: true })
                         }
-                    } if (responseData["status"] == "ZERO_RESULTS") {
+                    } if (response["status"] == "ZERO_RESULTS") {
                         var formattedAddress = "Address not found, please enter a valid address."
                         if (isMounted) {
                             this.setState({ addressValidation: false })
                         }
-                    } if (responseData["status"] == "INVALID_REQUEST") {
+                    } if (response["status"] == "INVALID_REQUEST") {
                         var formattedAddress = "Invalid query, please enter non-special characters."
                         if (isMounted) {
                             this.setState({ addressValidation: false })

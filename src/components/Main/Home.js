@@ -48,8 +48,9 @@ class Home extends Component {
                 Authorization: this.props.navigation.state.params.idToken
             }
         })
+        .then((response) => response = response.json())
         .then((response) => {
-            if (response._bodyInit == 'null') {
+            if (response == 'null') {
                 setTimeout(() => {
                     if (isMounted) {
                         this.setState({
@@ -59,7 +60,7 @@ class Home extends Component {
                     }
                 }, 2500)
             } else {
-                var responseData = ((JSON.parse(response._bodyInit)).Items)
+                var responseData = response.Items
                 setTimeout(() => {
                     if (this.state.user["custom:isRooter"] == "1") {
                         // Creates a new array with the names of the customers before their devices, sans extra names.
@@ -137,8 +138,9 @@ class Home extends Component {
                         Authorization: this.props.navigation.state.params.idToken
                     }
                 })
+                .then((response) => response = response.json())
                 .then((response) => {
-                    if (response._bodyInit == 'null') {
+                    if (response == 'null') {
                         if (isMounted) {
                             this.setState({
                                 disconnected: true,
@@ -150,7 +152,7 @@ class Home extends Component {
                                 disconnected: false,
                             })
                         }
-                        var responseDataRefresh = ((JSON.parse(response._bodyInit)).Items)
+                        var responseDataRefresh = response.Items
                         if (responseDataRefresh !== this.state.prevResponse) {
                             if (this.state.user["custom:isRooter"] == "1") {
                                 // Creates a new array with the names of the customers before their devices, sans extra names.

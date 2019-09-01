@@ -197,6 +197,7 @@ class Wizard extends Component {
                 }, 200);
                 
                 fetch('http://192.168.4.1/deviceinfo')
+                .then((response) => response = response.json())
                 .then((response) => {
                     // TODO: Save MAC Address
                     clearTimeout(timeout);
@@ -211,17 +212,16 @@ class Wizard extends Component {
             })
             .then(() => {
                 fetch('http://192.168.4.1/scan')
+                .then((response) => response = response.json())
                 .then((response) => {
-                    var responseData = (JSON.parse(response._bodyInit))
-                    if (!responseData["length"]) {
+                    if (!response["length"]) {
                         if (isMounted) {
                             this.setState({ isLoadingText: 'No networks in range' })
                         }
                     } else {
-                        var responseData = (JSON.parse(response._bodyInit))
                         if (isMounted) {
                             this.setState({
-                                networks: responseData,
+                                networks: response,
                                 isLoading: false,
                             })
                         }
@@ -248,11 +248,11 @@ class Wizard extends Component {
             console.log(this.state.login)
             console.log(this.state.ssid)
             fetch(`http://192.168.4.1/select?Router=${this.state.ssid}&Key=${this.state.login}`)
+            .then((response) => response = response.json())
             .then((response) => {
-                var responseData = (JSON.parse(response._bodyInit))
-                console.log(responseData)
-                console.log(responseData["connectionstatus"])
-                if (responseData["connectionstatus"] == "0") {
+                console.log(response)
+                console.log(response["connectionstatus"])
+                if (response["connectionstatus"] == "0") {
                     if (isMounted) {
                         console.log("Connection Status was 0")
                         this.setState({ screen: 41 })
@@ -275,7 +275,7 @@ class Wizard extends Component {
             if (isMounted) {
                 // TODO: Call API to register device
                 console.log("UpdateInsert service is not implemented yet, was just debugging the reconnect alert box")
-                this.props.navigation.navigate('Home')
+                this.props.navigation.navigate('Home', { idToken: this.props.navigation.state.params.idToken })
             }
         }
         if (this.state.screen == 42) {
@@ -294,19 +294,19 @@ class Wizard extends Component {
         }
         timeout = setTimeout(() => {
             fetch(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=AIzaSyDe78fuRVhrO9NMV3xYkK4MTYu3-U6aFhk&input=${unformattedAddress}&inputtype=textquery&fields=formatted_address,name&locationbias=ipbias`)
+                .then((response) => response = response.json())
                 .then((response) => {
-                    var responseData = (JSON.parse(response._bodyInit))
-                    if (responseData["status"] == "OK") {
-                        var formattedAddress = responseData["candidates"][0].formatted_address
+                    if (response["status"] == "OK") {
+                        var formattedAddress = response["candidates"][0].formatted_address
                         if (isMounted) {
                             this.setState({ addressValidation: true })
                         }
-                    } if (responseData["status"] == "ZERO_RESULTS") {
+                    } if (response["status"] == "ZERO_RESULTS") {
                         var formattedAddress = "Address not found, please enter a valid address."
                         if (isMounted) {
                             this.setState({ addressValidation: false })
                         }
-                    } if (responseData["status"] == "INVALID_REQUEST") {
+                    } if (response["status"] == "INVALID_REQUEST") {
                         var formattedAddress = "Invalid query, please enter non-special characters."
                         if (isMounted) {
                             this.setState({ addressValidation: false })

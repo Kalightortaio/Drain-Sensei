@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 import { Auth } from 'aws-amplify';
@@ -225,20 +225,42 @@ class Account extends Component {
                     },
                 );
                 return;
-            }  
-        } else {
+            }
+        } if ("Remove this code when the account update service is fixed" === "Remove this code when the account update service is fixed") {
             if (isMounted) {
-                // Call Server
                 Alert.alert(
-                    'Missing service!',
-                    'There is currently no server API to update users.',
+                    'Account Update Service is not functional',
+                    'Please fix and/or remove this reminder from production',
                     [{
                         text: 'Okay'
                     }, ], {
                         cancelable: false
                     },
                 );
-                this._nameModal.bind(this);
+                return;
+            }
+            this._nameModal();
+        } else {
+            if (isMounted) {
+                var data = {
+                    first_name: `${this.state.fname}`,
+                    family_name: `${this.state.lname}`,
+                }
+                fetch("https://veodvmmxvd.execute-api.us-east-1.amazonaws.com/prod", {
+                    method: "POST",
+                    headers: {
+                        Authorization: this.props.navigation.state.params.idToken
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(() => {
+                    this._nameModal();
+                    this._refresh();
+                })
+                .catch((err) => {
+                    this._nameModal();
+                    console.error(err);
+                })
             }
         }
     }
@@ -271,19 +293,41 @@ class Account extends Component {
                     );
                     return;
                 }
-            } else {
+            } if ("Remove this code when the account update service is fixed" === "Remove this code when the account update service is fixed") {
                 if (isMounted) {
-                    // Call Server
                     Alert.alert(
-                        'Missing service!',
-                        'There is currently no server API to update users.',
+                        'Account Update Service is not functional',
+                        'Please fix and/or remove this reminder from production',
                         [{
                             text: 'Okay'
                         }, ], {
                             cancelable: false
                         },
                     );
-                    this._emailModal.bind(this);
+                    return;
+                }
+                this._emailModal();
+
+            } else {
+                if (isMounted) {
+                    var data = {
+                        email: `${this.state.email}`,
+                    }
+                    fetch("https://veodvmmxvd.execute-api.us-east-1.amazonaws.com/prod", {
+                        method: "POST",
+                        headers: {
+                            Authorization: this.props.navigation.state.params.idToken
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(() => {
+                        this._emailModal();
+                        this._refresh();
+                    })
+                    .catch((err) => {
+                        this._emailModal();
+                        console.error(err);
+                    })
                 }
             }
         }
@@ -315,19 +359,40 @@ class Account extends Component {
                 );
                 return;
             }
-        } else {
+        } if ("Remove this code when the account update service is fixed" === "Remove this code when the account update service is fixed") {
             if (isMounted) {
-                // Call Server
                 Alert.alert(
-                    'Missing service!',
-                    'There is currently no server API to update users.',
+                    'Account Update Service is not functional',
+                    'Please fix and/or remove this reminder from production',
                     [{
                         text: 'Okay'
                     }, ], {
                         cancelable: false
                     },
                 );
-                this._addressModal.bind(this);
+                return;
+            }
+            this._addressModal();
+        } else {
+            if (isMounted) {
+                var data = {
+                    address: `${this.state.devAddress}`,
+                }
+                fetch("https://veodvmmxvd.execute-api.us-east-1.amazonaws.com/prod", {
+                    method: "POST",
+                    headers: {
+                        Authorization: this.props.navigation.state.params.idToken
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(() => {
+                    this._addressModal();
+                    this._refresh();
+                })
+                .catch((err) => {
+                    this._addressModal();
+                    console.error(err);
+                })
             }
         }
     }
@@ -341,19 +406,19 @@ class Account extends Component {
         }
         timeout = setTimeout(() => {
             fetch(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=AIzaSyDe78fuRVhrO9NMV3xYkK4MTYu3-U6aFhk&input=${unformattedAddress}&inputtype=textquery&fields=formatted_address,name&locationbias=ipbias`)
+                .then((response) => response = response.json())
                 .then((response) => {
-                    var responseData = (JSON.parse(response._bodyInit))
-                    if (responseData["status"] == "OK") {
-                        var formattedAddress = responseData["candidates"][0].formatted_address
+                    if (response["status"] == "OK") {
+                        var formattedAddress = response["candidates"][0].formatted_address
                         if (isMounted) {
                             this.setState({ addressValidation: true })
                         }
-                    } if (responseData["status"] == "ZERO_RESULTS") {
+                    } if (response["status"] == "ZERO_RESULTS") {
                         var formattedAddress = "Address not found, please enter a valid address."
                         if (isMounted) {
                             this.setState({ addressValidation: false })
                         }
-                    } if (responseData["status"] == "INVALID_REQUEST") {
+                    } if (response["status"] == "INVALID_REQUEST") {
                         var formattedAddress = "Invalid query, please enter non-special characters."
                         if (isMounted) {
                             this.setState({ addressValidation: false })

@@ -50,7 +50,7 @@ class HomeNav extends Component {
         return (
         <View>
             <View style={[styles.homeHeaderScreen, styles.row]}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Home', { idToken: this.props.navigation.state.params.idToken })}>
                     <Image source={require('../images/home.png')} style={styles.homeImage}></Image>
                 </TouchableOpacity>
                 <Text style={styles.menuText}>
@@ -97,7 +97,7 @@ class HomeNav extends Component {
             useNativeDriver: true,
         }).start(() => {this.setState({ toggleWidth: 0 * vw })})
         this.setState({ isClosed: true })
-        this.props.navigation.navigate('Account')
+        this.props.navigation.navigate('Account', { idToken: this.props.navigation.state.params.idToken })
     }
 
     _wizard() {
@@ -108,7 +108,7 @@ class HomeNav extends Component {
             useNativeDriver: true,
         }).start(() => {this.setState({ toggleWidth: 0 * vw })})
         this.setState({ isClosed: true })
-        this.props.navigation.navigate('Wizard')
+        this.props.navigation.navigate('Wizard', { idToken: this.props.navigation.state.params.idToken })
     }
 
     _order() {
