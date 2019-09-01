@@ -105,6 +105,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props.navigation.state.params.idToken)
         if (isMounted) {
             this.setState({ progress: 100 });
         }

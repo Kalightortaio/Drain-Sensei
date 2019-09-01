@@ -280,7 +280,7 @@ class Wizard extends Component {
         }
         if (this.state.screen == 42) {
             if (isMounted) {
-                Linking.openURL(`mailto:sales@drainsensei.com?subject=[Bug Report]&body=Servers were unable to add a device. Here is the following error: ${pairingError}`)
+                Linking.openURL(`mailto:sales@drainsensei.com?subject=[Bug Report]&body=Servers were unable to add a device. Here is the following error: ${this.state.pairingError}`)
             }
         }
     }
